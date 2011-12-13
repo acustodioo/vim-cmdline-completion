@@ -36,12 +36,17 @@ cnoremap <silent> <Plug>CmdlineCompletionBackward <C-\>e<SID>CmdlineCompletion(1
 cnoremap <silent> <Plug>CmdlineCompletionForward  <C-\>e<SID>CmdlineCompletion(0)<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""
+" Rules search
+"
+let g:cmdline_pattern_search = "[^ -!\"#$%&'()*+,./:;<=>?@[\\\]`{|}~]*"
+
+"""""""""""""""""""""""""""""""""""""""""""""
 " auto completion function ,
 " return new cmdline with matched word
 function! s:CmdlineCompletion(backword)
 
     let cmdline = getcmdline()
-    let index = match(cmdline, '\w\+$')
+    let index = match(cmdline, g:cmdline_pattern_search . '$')
     let cmd = strpart(cmdline, 0, index)
 
     " Not a word , skip completion
@@ -113,7 +118,7 @@ function! s:CmdlineSearch(backward)
     call cursor(position)
 
     " search ...
-    let pattern = '\<' . b:cc_word_prefix . '\w\+\>'
+    let pattern = '\<' . b:cc_word_prefix . g:cmdline_pattern_search . '\>'
     let flag = a:backward ? 'web' : 'we'
 
     " loop search until match unique or none
